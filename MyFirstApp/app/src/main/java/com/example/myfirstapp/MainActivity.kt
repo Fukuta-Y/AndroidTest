@@ -18,12 +18,13 @@ class MainActivity : ComponentActivity() {
         val outputText: TextView = findViewById(R.id.outputText)
 
         // ボタンのクリックリスナーを設定
+        // TODO確認
         submitButton.setOnClickListener {
             // 入力されたテキストを取得
             val userInput = inputText.text.toString()
 
             // 入力されたテキストをTextViewに表示
-            outputText.text = "You entered: $userInput"
+            outputText.text = "あなたの入力: $userInput"
         }
     }
 }
