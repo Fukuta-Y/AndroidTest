@@ -8,6 +8,7 @@ import com.example.myfirstapp.api.AllergyResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,12 +18,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.d("MainActivity", "onCreate called")
+
         // TextViewのIDを取得
         resultTextView = findViewById(R.id.resultTextView)
 
         // APIリクエストの実行
         RetrofitInstance.api.getAllergyInfo(1).enqueue(object : Callback<AllergyResponse> {
             override fun onResponse(call: Call<AllergyResponse>, response: Response<AllergyResponse>) {
+                Log.d("MainActivity", "APIリクエスト成功: ${response.body()}")
                 if (response.isSuccessful) {
                     val allergyIds = response.body()?.result?.info?.joinToString(", ") { it.allergyId.toString() }
                     resultTextView.text = "Allergy IDs: $allergyIds"
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<AllergyResponse>, t: Throwable) {
+                Log.e("MainActivity", "通信エラー: ${t.message}")
                 resultTextView.text = "通信エラー: ${t.message}"
             }
         })
