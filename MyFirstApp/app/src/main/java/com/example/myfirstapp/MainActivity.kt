@@ -1,66 +1,39 @@
 package com.example.myfirstapp
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.myfirstapp.api.RetrofitInstance
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.myfirstapp.api.AllergyResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
-    private val allergyNameMap = mapOf(
-        1 to "卵",
-        2 to "小麦",
-        3 to "そば",
-        4 to "牛乳",
-        5 to "落花生"
-    )
+    private lateinit var resultTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                AllergyScreen()
-            }
-        }
-    }
+        setContentView(R.layout.activity_main)
 
-    @Composable
-    fun AllergyScreen() {
-        var text by remember { mutableStateOf("読み込み中...") }
+        // TextViewのIDを取得
+        resultTextView = findViewById(R.id.resultTextView)
 
-        LaunchedEffect(Unit) {
-            try {
-                val response = RetrofitInstance.api.getRecipeAllergyInfo(recipeId = 1)
-                if (response.result.success) {
-                    val names = response.result.info.mapNotNull {
-                        allergyNameMap[it.allergyId]
-                    }
-                    text = "アレルギー: ${names.joinToString(", ")}"
+        // APIリクエストの実行
+        RetrofitInstance.api.getAllergyInfo(1).enqueue(object : Callback<AllergyResponse> {
+            override fun onResponse(call: Call<AllergyResponse>, response: Response<AllergyResponse>) {
+                if (response.isSuccessful) {
+                    val allergyIds = response.body()?.result?.info?.joinToString(", ") { it.allergyId.toString() }
+                    resultTextView.text = "Allergy IDs: $allergyIds"
                 } else {
-                    text = "取得失敗"
+                    resultTextView.text = "エラー: ${response.code()}"
                 }
-            } catch (e: Exception) {
-                text = "エラー: ${e.message}"
             }
-        }
 
-        // UI部分
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text(text = text, style = MaterialTheme.typography.bodyLarge)
-        }
+            override fun onFailure(call: Call<AllergyResponse>, t: Throwable) {
+                resultTextView.text = "通信エラー: ${t.message}"
+            }
+        })
     }
 }

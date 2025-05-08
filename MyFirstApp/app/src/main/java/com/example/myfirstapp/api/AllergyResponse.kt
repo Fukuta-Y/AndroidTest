@@ -1,8 +1,10 @@
+package com.example.myfirstapp.api
+
 data class AllergyResponse(
-    val result: ResultData
+    val result: Result
 )
 
-data class ResultData(
+data class Result(
     val success: Boolean,
     val info: List<AllergyInfo>
 )
