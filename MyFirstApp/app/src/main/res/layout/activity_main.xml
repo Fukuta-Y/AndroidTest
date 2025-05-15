@@ -1,38 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
 
-    <!-- テキスト入力フィールド -->
-    <EditText
-        android:id="@+id/inputText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="入力してください"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:padding="16dp"
-        android:textSize="18sp" />
-
-    <!-- ボタン -->
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="送信"
-        android:layout_below="@id/inputText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
-
-    <!-- 結果を表示するテキスト -->
     <TextView
-        android:id="@+id/outputText"
+        android:id="@+id/resultTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="入力された内容が出ます"
-        android:textSize="20sp"
-        android:layout_below="@id/submitButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
-
-</RelativeLayout>
+        android:text="読み込み中..."
+        android:textSize="18sp" />
+</LinearLayout>
